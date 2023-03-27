@@ -6,6 +6,7 @@ public:
     void Release() noexcept;
 
     void CreateGBufferTextures() noexcept;
+    void LoadModel() noexcept;
 
     void DrawGeo() noexcept;
 private:

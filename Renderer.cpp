@@ -2,6 +2,8 @@
 
 #include "Renderer.h"
 
+#include <tiny_obj_loader.h>
+
 #pragma comment(lib, "user32")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -76,4 +78,8 @@ void Renderer::DrawGeo() noexcept {
 
     m_DeviceContext->OMSetRenderTargets(ARRAYSIZE(RTVs), RTVs, DSV);
     // m_DeviceContext->DrawIndexed(_, 0, 0);
+}
+
+void Renderer::LoadModel() noexcept {
+
 }
