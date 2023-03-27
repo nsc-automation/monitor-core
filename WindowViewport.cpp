@@ -6,7 +6,7 @@ void WindowViewport::Initialize(HWND hWnd) noexcept {
     DXGI_SWAP_CHAIN_DESC swapchainDesc = {};
     swapchainDesc.BufferDesc.RefreshRate.Numerator = 0;
     swapchainDesc.BufferDesc.RefreshRate.Denominator = 1;
-    swapchainDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    swapchainDesc.BufferDesc.Format = ms_SwapchainFormat;
     swapchainDesc.SampleDesc.Count = 1;
     swapchainDesc.SampleDesc.Quality = 0;
     swapchainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS;
@@ -53,6 +53,14 @@ void WindowViewport::Release() noexcept {
     m_Device->Release();
 }
 
-void WindowViewport::Present() noexcept {
-    m_SwapChain->Present(1, 0);
+void WindowViewport::Reconfigure(size_t width, size_t height) noexcept {
+    m_DeviceContext->Flush();
+    HRESULT hr = m_SwapChain->ResizeBuffers(3, width, height, ms_SwapchainFormat, 0);
+    assert(SUCCEEDED(hr));
 }
+
+void WindowViewport::Present() noexcept {
+    HRESULT hr = m_SwapChain->Present(1, 0);
+    assert(SUCCEEDED(hr));
+}
+
