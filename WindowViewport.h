@@ -7,6 +7,9 @@ public:
     void Reconfigure(size_t width, size_t height) noexcept;
 
     void Present() noexcept;
+
+    ID3D11Device* GetDevice() noexcept;
+    std::pair<UINT, UINT> GetResolution() noexcept;
 private:
     static constexpr auto ms_SwapchainFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 

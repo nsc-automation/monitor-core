@@ -64,3 +64,12 @@ void WindowViewport::Present() noexcept {
     assert(SUCCEEDED(hr));
 }
 
+ID3D11Device *WindowViewport::GetDevice() noexcept {
+    return m_Device;
+}
+
+std::pair<UINT, UINT> WindowViewport::GetResolution() noexcept {
+    D3D11_TEXTURE2D_DESC desc;
+    m_BackBuffer->GetDesc(&desc);
+    return std::make_pair(desc.Width, desc.Height);
+}

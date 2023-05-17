@@ -2,14 +2,16 @@
 
 #include "Renderer.h"
 
-#include <tiny_obj_loader.h>
+// #include <tiny_obj_loader.h>
 
 #pragma comment(lib, "user32")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-void Renderer::Initialize() noexcept {
+void Renderer::Initialize(WindowViewport* viewport) noexcept {
+    m_Viewport = viewport;
+    m_Device = viewport->GetDevice();
     m_Device->GetImmediateContext(&m_DeviceContext);
     CreateGBufferTextures();
 }
@@ -22,13 +24,17 @@ void Renderer::Release() noexcept {
 }
 
 void Renderer::CreateGBufferTextures() noexcept {
+    auto backbufferSize = m_Viewport->GetResolution();
+
     D3D11_TEXTURE2D_DESC texDesc{};
     texDesc.Format = DXGI_FORMAT_R8G8B8A8_TYPELESS;
-//    texDesc.Width = ;
-//    texDesc.Height = ;
+    texDesc.Width = backbufferSize.first;
+    texDesc.Height = backbufferSize.second;
     texDesc.MipLevels = 1;
     texDesc.Usage = D3D11_USAGE_DEFAULT;
     texDesc.ArraySize = 1;
+    texDesc.SampleDesc.Count = 1;
+    texDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
 
     m_Device->CreateTexture2D(&texDesc, nullptr, &m_GAlbedoRGB_X);
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -39,6 +45,7 @@ void Renderer::CreateGBufferTextures() noexcept {
     m_Device->CreateRenderTargetView(m_GAlbedoRGB_X, &rtvDesc, &m_GAlbedoRGB_X_RTV);
 
     texDesc.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+    texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     m_Device->CreateTexture2D(&texDesc, nullptr, &m_GDepthStencil);
 
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};

@@ -108,7 +108,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
     WindowViewport windowViewport{};
     windowViewport.Initialize(hWnd);
     Renderer renderer{};
-    renderer.Initialize();
+    renderer.Initialize(&windowViewport);
 
     MSG msg = {nullptr};
     bool shouldClose = false;
